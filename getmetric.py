@@ -1,6 +1,8 @@
 ﻿#!/usr/bin/env python
 
+import os
 import sys
+import anydbm as dbm
 import select
 import imp
 import paramiko
@@ -38,7 +40,10 @@ def getcmd(metric, param):
 def sshcmd(host, cmd):
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+
+    # TODO: Dit misschien in een configfile?
     ssh.connect(host, 22, username='root', key_filename='key')
+
     stdin, stdout, stderr = ssh.exec_command(cmd)
 
     # commando gestuurd, antwoord ophalen.  Netjes wachten op uitvoer.
@@ -54,7 +59,7 @@ def sshcmd(host, cmd):
     return output
 
 
-def result(host, cmd, param, vtype, treshold):
+def result(host, cmd, param, vtype, treshold, cache):
     """
     Uitvoeren van oneliner op remote host, en vergelijken met treshold
 
@@ -72,13 +77,15 @@ def result(host, cmd, param, vtype, treshold):
         diskcmd = 'for i in "`lsblk -l | grep \'/\'`"; do echo $i | awk \'{print $1}\'; done'
         output = sshcmd(host, diskcmd)
         disks = output.split()
-        #print disks
+        # print disks
         if param in disks:
             # gevonden
             output = sshcmd(host, cmd)
         else:
             print "FALSE: disk does not exist"
-            sys.exit(0) # heeft geen zin om verder te gaan.
+            sys.exit(0)  # heeft geen zin om verder te gaan.
+
+    cache[host + '-' + vtype + '_' + param] = output
 
     if float(output) > float(treshold):
         return "TRUE: %s" % output
@@ -105,8 +112,13 @@ def main():
     param = sys.argv[3]
     treshold = sys.argv[4]
 
+    # Init lokale cache
+    cache = dbm.open(os.path.expanduser('~') + '/metricscache.dbm', 'c')
+
     vtype, cmd = getcmd(metric, param)
-    ret = result(host, cmd, param, vtype, treshold)
+    ret = result(host, cmd, param, vtype, treshold, cache)
+
+    cache.close()
 
     print ret
 
