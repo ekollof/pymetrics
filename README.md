@@ -1,14 +1,14 @@
-Synopsis:
+=== Synopsis ===
 	getmetrics.py <host> <metric type> <parameter> <treshold>
 
-Dependancies:
+=== Dependancies ===
 	paramiko (voor SSH)
 	SSH private key voor remote host (voor passwordless ssh naar andere hosts) als bestandsnaam 'key' in script root
 
-Uitvoer:
+=== Uitvoer ===
 	Als waarde beneden treshold, TRUE, anders FALSE
 
-Metric types:
+=== Metric types ===
 
 * load - load average <0 current, 1 5 min avg, 2 15 min avg)
 * diskfree - % ruimte vrij op disk op <parameter>
