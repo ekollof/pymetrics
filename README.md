@@ -3,6 +3,7 @@ Synopsis:
 
 Dependancies:
 	paramiko (voor SSH)
+	SSH private key voor remote host (voor passwordless ssh naar andere hosts) als bestandsnaam 'key' in script root
 
 Uitvoer:
 	Als waarde beneden treshold, TRUE, anders FALSE
