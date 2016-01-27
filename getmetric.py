@@ -38,6 +38,10 @@ def getcmd(metric, param):
 
 
 def sshcmd(host, cmd):
+    """
+
+    :rtype: object
+    """
     ssh = paramiko.SSHClient()
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -72,6 +76,7 @@ def result(host, cmd, param, vtype, treshold, cache):
 
     output = None
 
+    # TODO: Exception for disks. Maybe not the correct place.
     if vtype == 'disk':
         # bestaat de mount wel?
         diskcmd = 'for i in "`lsblk -l | grep \'/\'`"; do echo $i | awk \'{print $1}\'; done'
@@ -85,8 +90,14 @@ def result(host, cmd, param, vtype, treshold, cache):
             print "FALSE: disk does not exist"
             sys.exit(0)  # heeft geen zin om verder te gaan.
 
-    cache[host + '-' + vtype + '_' + param] = output
+    if vtype == 'value':
+        output = sshcmd(host, cmd)
 
+    cache[host + '-' + vtype + '-' + param] = output
+
+    pprint(output)
+    pprint(treshold)
+    
     if float(output) > float(treshold):
         return "TRUE: %s" % output
     else:
@@ -99,6 +110,7 @@ def main():
 
     :return:
     """
+
     if len(sys.argv) < 2:
         print "%s <host> <metric type> <parameter> <treshold>" % sys.argv[0]
         sys.exit(0)
