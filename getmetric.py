@@ -71,8 +71,8 @@ def result(host, cmd, param, vtype, treshold):
         # bestaat de mount wel?
         diskcmd = 'for i in "`lsblk -l | grep \'/\'`"; do echo $i | awk \'{print $1}\'; done'
         output = sshcmd(host, diskcmd)
-        # disks = output.split()
-        print disks
+        disks = output.split()
+        #print disks
         if param in disks:
             # gevonden
             output = sshcmd(host, cmd)
