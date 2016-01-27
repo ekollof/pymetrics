@@ -63,7 +63,7 @@ def sshcmd(host, cmd):
     return output
 
 
-def result(host, cmd, param, vtype, treshold, cache):
+def result(host, cmd, param, vtype, treshold, metric, cache):
     """
     Uitvoeren van oneliner op remote host, en vergelijken met treshold
 
@@ -93,7 +93,7 @@ def result(host, cmd, param, vtype, treshold, cache):
     if vtype == 'value':
         output = sshcmd(host, cmd)
 
-    cache[host + '-' + vtype + '-' + param] = output
+    cache[host + '-' + metric + '-' + vtype + '-' + param] = output
 
     pprint(output)
     pprint(treshold)
@@ -128,7 +128,7 @@ def main():
     cache = dbm.open(os.path.expanduser('~') + '/metricscache.dbm', 'c')
 
     vtype, cmd = getcmd(metric, param)
-    ret = result(host, cmd, param, vtype, treshold, cache)
+    ret = result(host, cmd, param, vtype, treshold, metric, cache)
 
     cache.close()
 
