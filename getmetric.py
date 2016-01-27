@@ -75,7 +75,7 @@ def result(host, cmd, param, vtype, treshold):
         print disks
         if param in disks:
             # gevonden
-            output = sshcmd(cmd)
+            output = sshcmd(host, cmd)
         else:
             print "FALSE: disk does not exist"
             sys.exit(0) # heeft geen zin om verder te gaan.
