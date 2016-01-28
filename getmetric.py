@@ -93,12 +93,21 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
             print "FALSE: disk does not exist"
             sys.exit(0)  # No use continuing.
 
+
+    if vtype == 'discover':
+        output = sshcmd(host, cmd).splitlines(True)
+        print output
+
+        for line in output:
+            if line.startswith('NET: '):
+                netdev = line[5:]
+                print netdev
+
+    return "TRUE: Discovery done"
+
     if vtype == 'value':
         output = sshcmd(host, cmd)
         output = output.strip()
-
-    if vtype == 'discover':
-        pass
 
     cache[host + '-' + metric + '-' + vtype + '-' + param] = output
 
