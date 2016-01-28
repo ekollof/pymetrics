@@ -22,6 +22,8 @@ def load(parameter=0):
 def diskused(parameter='nodisk'):
     return 'disk', "df -kha /dev/%s | tail -n -1 | awk '{print $5}' | sed -e s/%%//" % parameter
 
+def diskusedg(parameter='nodisk'):
+    return 'disk', "df -ka /dev/%s | tail -n -1 | awk '{print $3 / 1024 / 1024}' | sed -e s/%%//" % parameter
 
 def inodefree(parameter='nodisk'):
     return 'disk', '0'
