@@ -98,7 +98,7 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
         output = output.strip()
 
     if vtype == 'discover':
-        #
+        pass
 
     cache[host + '-' + metric + '-' + vtype + '-' + param] = output
 
