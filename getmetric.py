@@ -11,14 +11,15 @@ from pprint import pprint
 
 def getcmd(metric, param):
     """
-    Genereren van commando voor op de host.
+    Generate command for the target host
 
     :param metric:
-        :param param:
-            :return:
-                """
+    :param param:
+    :return:
+    """
 
-    # Laden van correcte metric functie
+    # Load correct metric function from lib/mtype.py
+
     m = imp.load_source('mtype', 'lib/mtype.py')
     if hasattr(m, metric):
         mtype = getattr(m, metric)
@@ -39,18 +40,20 @@ def getcmd(metric, param):
 
 def sshcmd(host, cmd):
     """
-
-    :rtype: object
+        Execute command on host using Paramiko
     """
     ssh = paramiko.SSHClient()
+
+    # This avoids the missing host key prompt.
     ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
-    # TODO: Dit misschien in een configfile?
+    # TODO: We might want to put this in a config file. Hardcoding is not nice.
     ssh.connect(host, 22, username='root', key_filename='key')
 
     stdin, stdout, stderr = ssh.exec_command(cmd)
 
-    # commando gestuurd, antwoord ophalen.  Netjes wachten op uitvoer.
+    # Sent command, fetch answer. Wait for EOF.
+
     output = ""
     while not stdout.channel.exit_status_ready():
         if stdout.channel.recv_ready():
@@ -65,14 +68,14 @@ def sshcmd(host, cmd):
 
 def result(host, cmd, param, vtype, treshold, metric, cache):
     """
-    Uitvoeren van oneliner op remote host, en vergelijken met treshold
+    Execute a oneliner on remote host and check treshold.
 
-    :param host: Host waar informatie vandaan moet komen
-    :param cmd: commando om uit te voeren
-    :param vtype: type waarde die terug komt
-    :param treshold: waarde waar informatie niet overheen mag.
+    :param host: Host to check on
+    :param cmd: commando we need to execute
+    :param vtype: value type (so we know what to do with it)
+    :param treshold: Treshold value
     :return:
-        """
+    """
 
     output = None
 
@@ -88,15 +91,16 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
             output = sshcmd(host, cmd)
         else:
             print "FALSE: disk does not exist"
-            sys.exit(0)  # heeft geen zin om verder te gaan.
+            sys.exit(0)  # No use continuing.
 
     if vtype == 'value':
         output = sshcmd(host, cmd)
+        output = output.strip()
+
+    if vtype == 'discover':
+        #
 
     cache[host + '-' + metric + '-' + vtype + '-' + param] = output
-
-    pprint(output)
-    pprint(treshold)
 
     if float(output) > float(treshold):
         return "TRUE: %s" % output
@@ -106,10 +110,8 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
 
 def main():
     """
-    Main functie.
-
-    :return:
-        """
+    Main
+    """
 
     if len(sys.argv) < 2:
         print "%s <host> <metric type> <parameter> <treshold>" % sys.argv[0]

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """
-Deze module genereert shellcommando's die worden uitgevoerd op de host.
-De functies genereren shell oneliners die meteen aan paramiko kunnen worden doorgegeven.
+This module holds shell commands that will be executed on the host. They will
+be handed over to the getmetrics program. This file is dynamically parsed. Just
+add your defs in here and getmetrics should just pick them up.
 """
 
 import sys
@@ -28,21 +29,23 @@ def diskusedg(parameter='nodisk'):
 def inodefree(parameter='nodisk'):
     return 'disk', '0'
 
-
 def swapinuse(parameter=0):
     return 'value', '0'
 
-
 def iops(parameter='nodisk'):
     return 'disk', '0'
-
 
 def netload(parameter='nonic'):
     return 'nic', '0'
 
 def test(parameter='test'):
-    return 'test', 'OK'
+    return 'test', 'uname -a'
 
+def discover(parameter=0):
+    return 'discover', 'ifconfig -s | tail -n +2 | awk \'{print $1}\' | xargs echo -e NET: && lsblk -l | grep / | awk \'{print $1}\' | xargs echo DISK:'
+
+def compare(parameter=0):
+    return 'compare',  'ifconfig -s | tail -n +2 | awk \'{print $1}\' | xargs echo -e NET: && lsblk -l | grep / | awk \'{print $1}\' | xargs echo DISK:'
 
 if __name__ == '__main__':
     print "This does nothing."
