@@ -14,9 +14,9 @@ def getcmd(metric, param):
     Genereren van commando voor op de host.
 
     :param metric:
-    :param param:
-    :return:
-    """
+        :param param:
+            :return:
+                """
 
     # Laden van correcte metric functie
     m = imp.load_source('mtype', 'lib/mtype.py')
@@ -30,9 +30,9 @@ def getcmd(metric, param):
             if mod.startswith('_') or mod == "sys":
                 continue
             allmods.append(mod)
-        sys.stderr.write("Valid metrics:\n\t")
-        pprint(allmods)
-        sys.exit(0)
+            sys.stderr.write("Valid metrics:\n\t")
+            pprint(allmods)
+            sys.exit(0)
 
     return vtype, cmd
 
@@ -72,7 +72,7 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
     :param vtype: type waarde die terug komt
     :param treshold: waarde waar informatie niet overheen mag.
     :return:
-    """
+        """
 
     output = None
 
@@ -97,7 +97,7 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
 
     pprint(output)
     pprint(treshold)
-    
+
     if float(output) > float(treshold):
         return "TRUE: %s" % output
     else:
@@ -109,7 +109,7 @@ def main():
     Main functie.
 
     :return:
-    """
+        """
 
     if len(sys.argv) < 2:
         print "%s <host> <metric type> <parameter> <treshold>" % sys.argv[0]
