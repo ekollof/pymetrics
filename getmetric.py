@@ -81,13 +81,15 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
 
     # TODO: Exception for disks. Maybe not the correct place.
     if vtype == 'disk':
-        # bestaat de mount wel?
+
+        # Check if the mount exists
+
         diskcmd = 'lsblk -l | grep / | awk \'{print $1}\''
         output = sshcmd(host, diskcmd)
         disks = output.split()
         #print disks
         if param in disks:
-            # gevonden
+            # found it
             output = sshcmd(host, cmd)
         else:
             print "FALSE: disk does not exist"
