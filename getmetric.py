@@ -103,7 +103,7 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
                 netdev = line[5:]
                 print netdev
 
-    return "TRUE: Discovery done"
+        return "TRUE: Discovery done"
 
     if vtype == 'value':
         output = sshcmd(host, cmd)
