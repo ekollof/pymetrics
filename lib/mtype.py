@@ -7,7 +7,6 @@ add your defs in here and getmetrics should just pick them up.
 
 import sys
 
-
 def load(parameter=0):
     """
     Get load average of system. Parameter selects current, 5 or 15 min avg
@@ -27,7 +26,7 @@ def diskused(parameter='nodisk'):
     """
      Get percentage of disk used
     """
-    return 'disk', "df -kha  | %s | tail -n -1 | awk '{print $5}' | sed -e s/%%//" % parameter
+    return 'disk', "df -kha  | grep %s | tail -n -1 | awk '{print $5}' | sed -e s/%%//" % parameter
 
 def diskusedg(parameter='nodisk'):
     """

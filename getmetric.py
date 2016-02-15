@@ -31,9 +31,10 @@ def getcmd(metric, param):
             if mod.startswith('_') or mod == "sys":
                 continue
             allmods.append(mod)
-            sys.stderr.write("Valid metrics:\n\t")
-            pprint(allmods)
-            sys.exit(0)
+
+        sys.stderr.write("Valid metrics:\n\t")
+        pprint(allmods)
+        sys.exit(0)
 
     return vtype, cmd
 
@@ -112,6 +113,8 @@ def result(host, cmd, param, vtype, treshold, metric, cache):
         output = output.strip()
 
     cache[host + '-' + metric + '-' + vtype + '-' + param] = output
+
+    pprint(output)
 
     if float(output) > float(treshold):
         return "TRUE: %s" % output
